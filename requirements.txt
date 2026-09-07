@@ -1,0 +1,10 @@
+# Lab 09 — Introduction to MLflow and GitHub Actions
+mlflow>=3.0
+scikit-learn>=1.5
+pandas>=2.0
+numpy>=2.0
+requests>=2.31
+pytest>=8.0
+ruff>=0.8
+ 
+# เวอร์ชันที่ทดสอบแล้ว: mlflow 3.16 · scikit-learn 1.9 · pandas 3.0 · numpy 2.4 · ruff 0.15 (Python 3.12)

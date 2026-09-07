@@ -1,0 +1,25 @@
+# Workflow ตัวแรก — ไว้ทำความรู้จักส่วนประกอบของ GitHub Actions
+# ตรงกับสไลด์ Lecture 09: Workflow / Trigger / Job / Step / Environment Variables
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions
+ 
+on: [push, workflow_dispatch]      # Trigger: push โค้ด หรือกดรันเองจากหน้า Actions
+ 
+jobs:
+  Explore-GitHub-Actions:          # ชื่อ Job
+    runs-on: ubuntu-latest         # Runner ที่ GitHub เตรียมให้
+ 
+    steps:                         # ลำดับขั้นตอนภายใน Job
+      - run: echo "งานนี้ถูกกระตุ้นโดย event ชนิด ${{ github.event_name }}"
+      - run: echo "กำลังรันบนเครื่อง ${{ runner.os }} ที่ GitHub เตรียมไว้ให้"
+      - run: echo "branch คือ ${{ github.ref }} และ repository คือ ${{ github.repository }}"
+ 
+      - name: Check out repository code
+        uses: actions/checkout@v4          # Step แบบเรียกใช้ Action สำเร็จรูป
+ 
+      - run: echo "โคลน ${{ github.repository }} ลงมาที่ runner เรียบร้อย"
+ 
+      - name: List files in the repository
+        run: ls ${{ github.workspace }}    # Step แบบสั่งรันคำสั่งเอง
+ 
+      - run: echo "สถานะของงานนี้คือ ${{ job.status }}"

@@ -1,0 +1,76 @@
+# CI จริงของโปรเจกต์ — ตรวจ 3 ด้าน: คุณภาพโค้ด · ความถูกต้องของข้อมูล · เกณฑ์คุณภาพของโมเดล
+name: CI
+ 
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:                 # ปุ่ม Run workflow ในหน้า Actions
+ 
+permissions:
+  contents: read                     # ให้สิทธิ์เท่าที่จำเป็น — workflow นี้แค่อ่านโค้ด
+ 
+env:
+  MLFLOW_DISABLE_TELEMETRY: "true"   # ตัวแปรสภาพแวดล้อมที่ทุก Step ในไฟล์นี้เห็น
+ 
+jobs:
+  # ---------- ด้านที่ 1: คุณภาพโค้ด ----------
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+ 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+ 
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+ 
+      - name: Code quality (ruff)
+        run: ruff check scripts/ tests/
+ 
+  # ---------- ด้านที่ 2 และ 3: ความถูกต้องของข้อมูล และเกณฑ์คุณภาพของโมเดล ----------
+  test:
+    needs: lint                      # โค้ดยังไม่ผ่านมาตรฐาน ไม่ต้องเสียเวลาเทรน
+    runs-on: ubuntu-latest
+    timeout-minutes: 15              # กัน job ค้างจนกินโควตา
+    strategy:
+      fail-fast: false               # ให้เห็นผลครบทุกเวอร์ชันแม้บางอันแดง
+      matrix:
+        python-version: ["3.11", "3.12"]   # รันซ้ำหนึ่งรอบต่อหนึ่งเวอร์ชัน
+ 
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+ 
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+ 
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+ 
+      - name: Data validation
+        run: python scripts/01_data_validation.py
+ 
+      - name: Data tests
+        run: pytest tests/test_data.py -v --junitxml=report-data.xml
+ 
+      - name: Model quality gate
+        run: pytest tests/test_model.py -v --junitxml=report-model.xml
+ 
+      - name: Upload test reports      # หลักฐานสำหรับแนบรายงาน — เก็บแม้ job ขึ้นแดง
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-py${{ matrix.python-version }}
+          path: report-*.xml
+ 
+      - name: Summary
+        run: echo "CI ผ่านบน Python ${{ matrix.python-version }} — สถานะ ${{ job.status }}"

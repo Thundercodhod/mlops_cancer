@@ -1,0 +1,14 @@
+# ไฟล์ที่ MLflow สร้างตอนรัน — ห้าม commit ขึ้น GitHub
+mlflow.db
+mlruns/
+processed_data/
+__pycache__/
+ 
+# ไฟล์ที่เครื่องมือใน CI สร้างไว้ชั่วคราว
+.ruff_cache/
+report-*.xml
+ 
+# ไฟล์ขยะของระบบปฏิบัติการ (git ไม่รองรับคอมเมนต์ท้ายบรรทัด จึงต้องแยกบรรทัด)
+.DS_Store
+Thumbs.db
+desktop.ini
