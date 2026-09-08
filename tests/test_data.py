@@ -23,7 +23,7 @@ def test_accuracy_gate():
  
  
 def test_pipeline_has_scaler():
-    """preprocessing ต้องอยู่ใน pipeline เดียวกับโมเดล — กัน Training-Serving Skew"""
+    """preprocessing ต้องอยู่ใน pipeline เดียวกับโมเดล — กัน Training-Serving Skew."""
     assert "scaler" in pipe.named_steps
  
  
