@@ -2,11 +2,11 @@
 
 from sklearn.datasets import load_breast_cancer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score ,  roc_auc_score
+from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
- 
+
 MIN_ACCURACY = 0.95
 MIN_ROC_AUC = 0.98
  

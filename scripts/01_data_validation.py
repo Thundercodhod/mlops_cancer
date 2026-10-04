@@ -1,6 +1,7 @@
 import mlflow
 from sklearn.datasets import load_breast_cancer
 
+
 def validate_data():
     """
     Loads the breast cancer dataset, performs basic validation checks,
@@ -38,8 +39,7 @@ def validate_data():
         # Check if the data passes our defined criteria
 
         validation_status = "Success"
-        if (missing_values > 0 or num_classes != 2
-                or class_balance < 0.20):
+        if (missing_values > 0 or num_classes != 2 or class_balance < 0.20):
             validation_status = "Failed"
  
         mlflow.log_param("validation_status", validation_status)

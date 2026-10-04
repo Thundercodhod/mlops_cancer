@@ -1,6 +1,7 @@
 import mlflow
 from sklearn.datasets import load_breast_cancer
 
+
 def load_and_predict():
     MODEL_NAME = "cancer-classifier-prod"
     MODEL_ALIAS = "staging"
